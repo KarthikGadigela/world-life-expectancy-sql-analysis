@@ -1,24 +1,26 @@
-# World Life Expectancy — SQL Data Analysis
+# 🌍 World Life Expectancy — SQL Data Analysis
 
 ## 📌 Project Overview
 
 This project analyzes World Life Expectancy data using MySQL.
 
-The project focuses on data cleaning and exploratory data analysis to understand patterns in Life Expectancy across countries and years, with additional analysis of GDP, development status, BMI, Adult Mortality and Infant Deaths.
+The project follows a complete SQL-based analytical workflow:
+
+**Data Cleaning → Exploratory Data Analysis → Insights**
+
+The analysis explores Life Expectancy across countries and years, with additional investigation into GDP, development status, BMI, Adult Mortality and Infant Deaths.
 
 ---
 
 ## 🎯 Project Objective
 
-The objective of this project is to clean and analyze World Life Expectancy data using SQL and answer analytical questions related to:
+The objective of this project is to use SQL to clean and analyze World Life Expectancy data and answer analytical questions such as:
 
-- Life Expectancy changes across countries
-- GDP and Life Expectancy
-- Developed vs Developing countries
-- BMI
-- Adult Mortality
-- Infant Deaths
-- India-specific trends
+- Which countries experienced the largest changes in Life Expectancy?
+- How does Life Expectancy differ between Developed and Developing countries?
+- How does Life Expectancy differ across GDP groups?
+- What patterns can be observed in Adult Mortality and Infant Deaths?
+- How have key indicators changed for India over time?
 
 ---
 
@@ -34,176 +36,120 @@ The objective of this project is to clean and analyze World Life Expectancy data
 
 ### Key Variables
 
-- Country
-- Year
-- Life Expectancy
-- Status
-- GDP
-- BMI
-- Adult Mortality
-- Infant Deaths
+| Variable | Description |
+|---|---|
+| Country | Country name |
+| Year | Observation year |
+| Life Expectancy | Average expected years of life |
+| Status | Developed / Developing |
+| GDP | GDP per capita |
+| BMI | Average Body Mass Index |
+| Adult Mortality | Adult mortality indicator |
+| Infant Deaths | Number of infant deaths |
 
 ---
 
-## 🧹 Data Cleaning
+# 🧹 Data Cleaning
 
-Before performing the analysis, I cleaned the dataset using MySQL.
+Before performing exploratory analysis, I examined and cleaned the dataset using SQL.
 
-### Cleaning activities
+### Data quality issues identified
 
-- Identified duplicate Country-Year records
+- Duplicate Country-Year records
+- Missing Status values
+- Missing Life Expectancy values
+
+### Cleaning techniques used
+
+- Identified duplicate records using `ROW_NUMBER()`
+- Used `PARTITION BY` to identify duplicate Country-Year combinations
 - Removed duplicate records
-- Identified missing Status values
-- Filled missing Status values using country-level information
+- Used `JOIN` operations to retrieve country-level Status information
+- Updated missing Status values
 - Identified missing Life Expectancy values
 - Filled missing Life Expectancy values using available country/year information
 
-### SQL techniques used
-
-- `ROW_NUMBER()`
-- `PARTITION BY`
-- `JOIN`
-- `UPDATE`
-
 ---
 
-## 🔎 Exploratory Data Analysis
+# 🔎 Exploratory Data Analysis
 
-The cleaned dataset was analyzed to answer the following questions:
+After cleaning the dataset, I performed exploratory analysis using SQL.
 
-### 1. Life Expectancy Change
+## 1. Life Expectancy Change by Country
 
-Which countries experienced the largest change in Life Expectancy between 2007 and 2022?
+**Question:**  
+Which countries experienced the largest change in Life Expectancy across the available years?
 
-### 2. GDP Analysis
+I compared the minimum and maximum Life Expectancy for each country.
 
-How does average Life Expectancy differ between higher-GDP and lower-GDP observations?
+### SQL concepts
 
-### 3. Development Status
-
-How does average Life Expectancy differ between Developed and Developing countries?
-
-### 4. BMI Analysis
-
-How does average BMI vary across countries?
-
-### 5. Mortality Analysis
-
-What are the Adult Mortality and Infant Death patterns in the dataset?
-
-### 6. India Analysis
-
-How do Life Expectancy, Adult Mortality and Infant Deaths change across the available years for India?
-
-### 7. Time-Based Analysis
-
-How can Window Functions be used to calculate cumulative Adult Mortality over time?
-
----
-
-# 📊 Key Findings
-
-## 1. Developed vs Developing Countries
-
-| Status | Average Life Expectancy |
-|---|---:|
-| Developed | 79.20 years |
-| Developing | 66.83 years |
-
-**Difference: 12.37 years**
-
-The dataset shows a substantial difference in average Life Expectancy between Developed and Developing countries.
+`MIN()` · `MAX()` · `GROUP BY` · `ORDER BY`
 
 ---
 
 ## 2. GDP and Life Expectancy
 
-| GDP Group | Average Life Expectancy |
-|---|---:|
-| Higher GDP | 74.20 years |
-| Lower GDP | 64.70 years |
+**Question:**  
+How does average Life Expectancy differ between higher-GDP and lower-GDP observations?
 
-**Difference: 9.50 years**
+The analysis uses a GDP threshold of 1500 to create two groups.
 
-The higher-GDP group showed a higher average Life Expectancy in this dataset.
+### SQL concepts
 
-> Note: This analysis identifies an association in the dataset and does not establish causation.
+`CASE WHEN` · `AVG()` · Conditional Aggregation
 
----
-
-## 3. Largest Life Expectancy Increase
-
-**Haiti**
-
-| Year | Life Expectancy |
-|---|---:|
-| 2007 | 36.3 |
-| 2022 | 65.0 |
-
-**Increase: 28.7 years**
-
-Haiti recorded the largest Life Expectancy increase in the country-level comparison.
+> This analysis identifies an association in the dataset and does not establish causation.
 
 ---
 
-## 4. India: 2007–2022
+## 3. Developed vs Developing Countries
 
-| Indicator | 2007 | 2022 |
-|---|---:|---:|
-| Life Expectancy | 62.5 | 68.3 |
-| Adult Mortality | 224 | 181 |
-| Infant Deaths | 1,800 | 910 |
+**Question:**  
+How does average Life Expectancy differ between Developed and Developing countries?
 
-Life Expectancy increased by **5.8 years** over the period.
+The analysis calculates average Life Expectancy and the number of distinct countries within each development group.
 
-Infant Deaths decreased by **890** in the dataset.
+### SQL concepts
 
----
-
-## 🛠️ SQL Skills Demonstrated
-
-### Data Cleaning
-- Duplicate detection
-- Missing-value handling
-- `ROW_NUMBER()`
-
-### Data Transformation
-- `JOIN`
-- `UPDATE`
-- `CASE WHEN`
-
-### Data Analysis
-- `GROUP BY`
-- `HAVING`
-- `AVG()`
-- `MIN()`
-- `MAX()`
-- `SUM()`
-- Conditional aggregation
-
-### Advanced SQL
-- CTEs
-- Window Functions
-- `PARTITION BY`
-- `ORDER BY`
+`GROUP BY` · `AVG()` · `COUNT(DISTINCT)`
 
 ---
 
-## 💡 Key Learning
+## 4. Mortality Analysis
 
-This project helped me move beyond learning SQL syntax and apply SQL to a complete data-analysis workflow:
+**Question:**  
+How do Adult Mortality and Infant Deaths vary across the dataset?
 
-**Data Cleaning → Exploration → Analysis → Insights**
+The analysis examines mortality-related indicators at country and year levels.
 
-The biggest takeaway was that SQL is not just about retrieving data; it is about asking meaningful questions and using data to answer them.
+### SQL concepts
+
+Aggregations · `GROUP BY` · `ORDER BY`
 
 ---
 
-## 🚀 Future Improvements
+## 5. India Time-Based Analysis
 
-Potential future extensions of this project include:
+**Question:**  
+How do Life Expectancy, Adult Mortality and Infant Deaths change across the available years for India?
 
-- Statistical correlation analysis
-- Additional time-series analysis
-- Visualization of key findings
-- Further investigation of relationships between socioeconomic and health indicators
+The analysis tracks these indicators over time.
+
+### SQL concepts
+
+`WHERE` · `ORDER BY` · Time-based analysis
+
+---
+
+## 6. Cumulative Analysis Using Window Functions
+
+For India, I used a SQL Window Function to calculate cumulative Adult Mortality across years.
+
+### SQL concept
+
+```sql
+SUM(Adult_Mortality) OVER(
+    PARTITION BY Country
+    ORDER BY Year
+)
