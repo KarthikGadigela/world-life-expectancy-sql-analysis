@@ -1,6 +1,6 @@
-# 🌍 World Life Expectancy — SQL Data Analysis
+#  World Life Expectancy — SQL Data Analysis
 
-## 📌 Project Overview
+##  Project Overview
 
 This project analyzes World Life Expectancy data using MySQL.
 
@@ -12,7 +12,7 @@ The analysis explores Life Expectancy across countries and years, with additiona
 
 ---
 
-## 🎯 Project Objective
+##  Project Objective
 
 The objective of this project is to use SQL to clean and analyze World Life Expectancy data and answer analytical questions such as:
 
@@ -24,7 +24,7 @@ The objective of this project is to use SQL to clean and analyze World Life Expe
 
 ---
 
-## 🗂️ Dataset
+##  Dataset
 
 **Dataset:** World Life Expectancy
 
@@ -71,7 +71,7 @@ Before performing exploratory analysis, I examined and cleaned the dataset using
 
 ---
 
-# 🔎 Exploratory Data Analysis
+#  Exploratory Data Analysis
 
 After cleaning the dataset, I performed exploratory analysis using SQL.
 
