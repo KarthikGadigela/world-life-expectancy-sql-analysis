@@ -49,7 +49,7 @@ The objective of this project is to use SQL to clean and analyze World Life Expe
 
 ---
 
-# 🧹 Data Cleaning
+#  Data Cleaning
 
 Before performing exploratory analysis, I examined and cleaned the dataset using SQL.
 
