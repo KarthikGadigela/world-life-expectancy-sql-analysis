@@ -38,6 +38,13 @@ SELECT *
 FROM world_life_expectancy
 ;
 
+-- --------------------------------------------------------
+-- 1.1 IDENTIFY DUPLICATE COUNTRY-YEAR RECORDS
+-- --------------------------------------------------------
+
+-- Question:
+-- Are there duplicate records for the same country and year?
+
 SELECT country, year,
 		CONCAT(country, year), COUNT(CONCAT(country, year))
 		FROM world_life_expectancy
@@ -45,7 +52,13 @@ SELECT country, year,
 		HAVING COUNT(CONCAT(country, year))>1
 ;
 
+-- --------------------------------------------------------
+-- 1.2 REMOVE DUPLICATE RECORDS
+-- --------------------------------------------------------
 
+-- Question:
+-- How can duplicate Country-Year records be removed
+-- while retaining one valid record?
 
 DELETE FROM world_life_expectancy
 WHERE row_id IN(
@@ -58,9 +71,12 @@ WHERE row_num > 1)
 )
 ;
 
--- ========================================================
--- 2. HANDLE MISSING VALUES
--- ========================================================
+-- --------------------------------------------------------
+-- 1.3 HANDLE MISSING STATUS VALUES
+-- --------------------------------------------------------
+
+-- Question:
+-- Which records have missing development Status values?
 
 SELECT *
 FROM world_life_expectancy
@@ -92,6 +108,14 @@ AND t2.status <> ''
 AND t2.status = 'Developed'
 ;
 
+-- --------------------------------------------------------
+-- 1.4 HANDLE MISSING LIFE EXPECTANCY VALUES
+-- --------------------------------------------------------
+
+-- Question:
+-- Which records have missing Life Expectancy values
+-- and how can the missing values be handled?
+
 SELECT t1.country, t1.year, t1.`Life expectancy`,  
 		t2.country, t2.year, t2.`Life expectancy`,
         t3.country, t3.year, t3.`Life expectancy`,
@@ -122,15 +146,19 @@ FROM world_life_expectancy
 WHERE `Life expectancy` = '';
 
 -- ========================================================
--- 3. EXPLORATORY DATA ANALYSIS
+-- 2. EXPLORATORY DATA ANALYSIS
 -- ========================================================
 
 SELECT * 
 FROM world_life_expectancy;
 
 -- --------------------------------------------------------
--- 3.1 LIFE EXPECTANCY CHANGE BY COUNTRY
+-- 2.1 LIFE EXPECTANCY CHANGE BY COUNTRY
 -- --------------------------------------------------------
+
+-- Question:
+-- Which countries experienced the largest change
+-- in Life Expectancy across the available years?
 
 SELECT country,MIN(year), MAX(YEAR)
 FROM world_life_expectancy
@@ -147,8 +175,12 @@ ORDER BY life_exp DESC
 ;
 
 -- --------------------------------------------------------
--- 3.2 GDP AND LIFE EXPECTANCY ANALYSIS
+-- 2.2 GDP AND LIFE EXPECTANCY
 -- --------------------------------------------------------
+
+-- Question:
+-- How does average Life Expectancy differ between
+-- higher-GDP and lower-GDP observations?
 
 SELECT country, ROUND(AVG(`Life expectancy`),2)AS avg_life_exp, ROUND(AVG(GDP),2) AS avg_gdp
 FROM world_life_expectancy
@@ -157,12 +189,30 @@ HAVING AVG(`Life expectancy`) <> 0
 AND AVG (GDP) > 0
 ORDER BY avg_gdp DESC;
 
-SELECT * 
-FROM world_life_expectancy;
+-- Note:
+-- This analysis identifies an association in the dataset.
+-- It does not establish a causal relationship between GDP
+-- and Life Expectancy.
 
-SELECT country, ROUND(AVG(`Life expectancy`),1)AS avg_life_exp, ROUND(AVG(GDP),1) AS avg_gdp
+-- --------------------------------------------------------
+-- 2.3 DEVELOPED VS DEVELOPING COUNTRIES
+-- --------------------------------------------------------
+
+-- Question:
+-- How does average Life Expectancy differ between
+-- Developed and Developing countries?
+
+SELECT Status, ROUND(AVG(`Life expectancy`),2)
 FROM world_life_expectancy
-GROUP BY country;
+GROUP BY status;
+
+SELECT Status, COUNT(DISTINCT country),ROUND(AVG(`Life expectancy`),2)
+FROM world_life_expectancy
+GROUP BY Status;
+
+-- --------------------------------------------------------
+-- 2.4 Differ B/W Higher & Lower GDP On Avg Life Expectancy
+-- --------------------------------------------------------
 
 -- Question:
 -- How does average Life Expectancy differ between
@@ -184,7 +234,7 @@ FROM world_life_expectancy;
 
 
 -- --------------------------------------------------------
--- 3.6 INDIA TIME-BASED ANALYSIS
+-- 2.5 INDIA TIME-BASED ANALYSIS
 -- --------------------------------------------------------
 
 -- Question:
@@ -200,10 +250,13 @@ FROM world_life_expectancy
 WHERE country = 'India'
 ORDER BY year;
 
+-- --------------------------------------------------------
+-- 2.6 CUMULATIVE ADULT MORTALITY USING WINDOW FUNCTION
+-- --------------------------------------------------------
 
 -- Question:
--- What is the cumulative Adult Mortality across years
--- for India?
+-- How can a Window Function be used to calculate
+-- cumulative Adult Mortality over time for India?
 
 SELECT
     country,
@@ -217,23 +270,24 @@ FROM world_life_expectancy
 WHERE country = 'India'
 ORDER BY year;
 
--- --------------------------------------------------------
--- 3.7 Developed VS Developing
--- --------------------------------------------------------
 
-SELECT Status, ROUND(AVG(`Life expectancy`),2)
-FROM world_life_expectancy
-GROUP BY status;
+-- ========================================================
+-- 3. KEY FINDINGS
+-- ========================================================
 
-SELECT Status, COUNT(DISTINCT country),ROUND(AVG(`Life expectancy`),2)
-FROM world_life_expectancy
-GROUP BY Status;
+/*
+1. Developed countries had a higher average Life Expectancy
+   than Developing countries in the dataset.
 
+2. The higher-GDP group showed a higher average Life
+   Expectancy than the lower-GDP group.
 
+3. Haiti recorded the largest Life Expectancy increase
+   in the country-level comparison.
 
+4. India's Life Expectancy increased between 2007 and 2022,
+   while Infant Deaths decreased over the same period.
 
-
-
-
-
-
+5. Window Functions were used to perform cumulative,
+   time-based Adult Mortality analysis for India.
+*/
